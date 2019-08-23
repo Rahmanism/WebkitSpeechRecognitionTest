@@ -21,6 +21,7 @@
 
         let container = document.querySelector('.container');
         let p = document.createElement('p');
+        p.contentEditable = true;
         let span = document.createElement('span');
 
         const recognition = new SpeechRecognition();
@@ -37,6 +38,52 @@
                 map(result => result.transcript).
                 join(' ');
 
+            if (transcript.includes("علامت سوال")) {
+                transcript = transcript.replace("علامت سوال", "؟");
+            }
+
+            if (transcript.includes("سلام دوم") && e.results[0].isFinal) {
+                transcript = "رفتیم خط بعد";
+                p = document.createElement('p');
+                p.contentEditable = true;
+                container.appendChild(p);
+            }
+
+            if (transcript.includes("از نو") && e.results[0].isFinal) {
+                container.innerHTML = "";
+                p.innerHTML = "";
+            }
+
+            if (transcript.includes("برو پایین")) {
+                transcript = "";
+                container.style.position = "fixed";
+                container.style.bottom = "1rem";
+                container.style.top = "";
+                console.log('windows inner width: ', window.innerWidth);
+                console.log('container client with: ', container.clientWidth);
+                let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
+                console.log('left: ', left)
+                container.style.left = left + 'px';
+            }
+
+            
+            if (transcript.includes("برو بالا")) {
+                transcript = "";
+                container.style.position = "fixed";
+                container.style.top = "1rem";
+                container.style.bottom = "";
+                console.log('windows inner width: ', window.innerWidth);
+                console.log('container client with: ', container.clientWidth);
+                let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
+                console.log('left: ', left)
+                container.style.left = left + 'px';
+            }
+
+            if (transcript.includes("توقف تایپ")) {
+                transcript = transcript.replace("توقف تایپ", "");
+                recognition.stop();
+                recognition.abort();
+            }
 
             span.textContent = transcript + ' ';
             p.appendChild(span);
