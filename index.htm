@@ -19,6 +19,7 @@
             window.SpeechRecognition ||
             window.webkitSpeechRecognition;
 
+        let body = document.querySelector('body');
         let container = document.querySelector('.container');
         let p = document.createElement('p');
         p.contentEditable = true;
@@ -77,6 +78,18 @@
                 let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
                 console.log('left: ', left)
                 container.style.left = left + 'px';
+            }
+
+            if (transcript.includes("آبی شو") && e.results[0].isFinal) {
+                transcript = "";
+                body.className = "blue";
+            } else if (transcript.includes("سبز شو") && e.results[0].isFinal) {
+                transcript = "";
+                body.className = "green";
+            }
+            if (transcript.includes("رنگ خودت شو") && e.results[0].isFinal) {
+                transcript = "";
+                body.className = "default";
             }
 
             if (transcript.includes("توقف تایپ")) {
