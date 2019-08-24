@@ -10,109 +10,116 @@
 </head>
 
 <body>
+    <div>
+        <input type="button" value="شروع" id="startBtn" />
+    </div>
     <div class="container">
 
     </div>
 
     <script>
-        window.SpeechRecognition =
-            window.SpeechRecognition ||
-            window.webkitSpeechRecognition;
 
-        let body = document.querySelector('body');
-        let container = document.querySelector('.container');
-        let p = document.createElement('p');
-        p.contentEditable = true;
-        let span = document.createElement('span');
+        function SpchRcgnn() {
+            window.SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
 
-        const recognition = new SpeechRecognition();
-        recognition.lang = "fa-IR";
-        recognition.interimResults = true;
+            let body = document.querySelector('body');
+            let container = document.querySelector('.container');
+            let p = document.createElement('p');
+            p.contentEditable = true;
+            let span = document.createElement('span');
 
-        recognition.start();
-        recognition.addEventListener('end', recognition.start);
-        recognition.addEventListener('result', e => {
-            container.appendChild(p);
+            const recognition = new SpeechRecognition();
+            recognition.lang = "fa-IR";
+            recognition.interimResults = true;
 
-            let transcript = Array.from(e.results).
-                map(result => result[0]).
-                map(result => result.transcript).
-                join(' ');
-
-            if (transcript.includes("علامت سوال")) {
-                transcript = transcript.replace("علامت سوال", "؟");
-            }
-
-            if (transcript.includes("سلام دوم") && e.results[0].isFinal) {
-                transcript = "رفتیم خط بعد";
-                p = document.createElement('p');
-                p.contentEditable = true;
+            recognition.start();
+            recognition.addEventListener('end', recognition.start);
+            recognition.addEventListener('result', e => {
                 container.appendChild(p);
-            }
 
-            if (transcript.includes("از نو") && e.results[0].isFinal) {
-                container.innerHTML = "";
-                p.innerHTML = "";
-            }
+                let transcript = Array.from(e.results).
+                    map(result => result[0]).
+                    map(result => result.transcript).
+                    join(' ');
 
-            if (transcript.includes("برو پایین")) {
-                transcript = "";
-                container.style.position = "fixed";
-                container.style.bottom = "1rem";
-                container.style.top = "";
-                console.log('windows inner width: ', window.innerWidth);
-                console.log('container client with: ', container.clientWidth);
-                let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
-                console.log('left: ', left)
-                container.style.left = left + 'px';
-            }
+                if (transcript.includes("علامت سوال")) {
+                    transcript = transcript.replace("علامت سوال", "؟");
+                }
 
-            
-            if (transcript.includes("برو بالا")) {
-                transcript = "";
-                container.style.position = "fixed";
-                container.style.top = "1rem";
-                container.style.bottom = "";
-                console.log('windows inner width: ', window.innerWidth);
-                console.log('container client with: ', container.clientWidth);
-                let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
-                console.log('left: ', left)
-                container.style.left = left + 'px';
-            }
+                if (transcript.includes("سلام دوم") && e.results[0].isFinal) {
+                    transcript = "رفتیم خط بعد";
+                    p = document.createElement('p');
+                    p.contentEditable = true;
+                    container.appendChild(p);
+                }
 
-            if (transcript.includes("آبی شو") && e.results[0].isFinal) {
-                transcript = "";
-                body.className = "blue";
-            } else if (transcript.includes("سبز شو") && e.results[0].isFinal) {
-                transcript = "";
-                body.className = "green";
-            }
-            if (transcript.includes("رنگ خودت شو") && e.results[0].isFinal) {
-                transcript = "";
-                body.className = "default";
-            }
+                if (transcript.includes("از نو") && e.results[0].isFinal) {
+                    container.innerHTML = "";
+                    p.innerHTML = "";
+                }
 
-            if (transcript.includes("توقف تایپ")) {
-                transcript = transcript.replace("توقف تایپ", "");
-                recognition.stop();
-                recognition.abort();
-            }
+                if (transcript.includes("برو پایین")) {
+                    transcript = "";
+                    container.style.position = "fixed";
+                    container.style.bottom = "1rem";
+                    container.style.top = "";
+                    console.log('windows inner width: ', window.innerWidth);
+                    console.log('container client with: ', container.clientWidth);
+                    let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
+                    console.log('left: ', left)
+                    container.style.left = left + 'px';
+                }
 
-            span.textContent = transcript + ' ';
-            p.appendChild(span);
+                
+                if (transcript.includes("برو بالا")) {
+                    transcript = "";
+                    container.style.position = "fixed";
+                    container.style.top = "1rem";
+                    container.style.bottom = "";
+                    console.log('windows inner width: ', window.innerWidth);
+                    console.log('container client with: ', container.clientWidth);
+                    let left = Math.floor((window.innerWidth - container.clientWidth) / 2);
+                    console.log('left: ', left)
+                    container.style.left = left + 'px';
+                }
 
-            if (e.results[0].isFinal) {
-                span = document.createElement('span');
+                if (transcript.includes("آبی شو") && e.results[0].isFinal) {
+                    transcript = "";
+                    body.className = "blue";
+                } else if (transcript.includes("سبز شو") && e.results[0].isFinal) {
+                    transcript = "";
+                    body.className = "green";
+                }
+                if (transcript.includes("رنگ خودت شو") && e.results[0].isFinal) {
+                    transcript = "";
+                    body.className = "default";
+                }
+
+                if (transcript.includes("توقف تایپ")) {
+                    transcript = transcript.replace("توقف تایپ", "");
+                    recognition.stop();
+                    recognition.abort();
+                }
+
+                span.textContent = transcript + ' ';
                 p.appendChild(span);
-            }
 
-            console.log(transcript);
-        });
+                if (e.results[0].isFinal) {
+                    span = document.createElement('span');
+                    p.appendChild(span);
+                }
 
-        console.log(recognition);
+                console.log(transcript);
+            });
+
+            console.log(recognition);
+        }
 
 
-
+        var startBtn = document.getElementById("startBtn");
+        startBtn.addEventListener("click", SpchRcgnn);
 
     </script>
 </body>
